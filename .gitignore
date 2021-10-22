@@ -1,0 +1,9 @@
+Server/.vs/*
+Server/out/*
+Server/Server/out/*
+Server/Server/CMakeSettings.json
+
+Client/.vs/*
+Client/out/*
+Client/Client/out/*
+Client/Client/CMakeSettings.json
