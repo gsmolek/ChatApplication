@@ -1,3 +1,0 @@
-C:\Users\PP\Documents\Projects\ChatApplication\Client\Windows\Windows\obj\Debug\net5.0-windows\MainWindow.g.cs
-C:\Users\PP\Documents\Projects\ChatApplication\Client\Windows\Windows\obj\Debug\net5.0-windows\Windows_MarkupCompile.cache
-C:\Users\PP\Documents\Projects\ChatApplication\Client\Windows\Windows\obj\Debug\net5.0-windows\Windows_MarkupCompile.lref

@@ -15,4 +15,7 @@ Client/ChatApplication/bin/*
 Client/ChatApplication/bin
 Client/ChatApplication/obj/*
 Client/ChatApplication/obj
-
+Client/WindowsApplication/bin/
+Client/WindowsApplication/bin/*
+Client/WindowsApplication/obj/*
+Client/WindowsApplication/obj/
