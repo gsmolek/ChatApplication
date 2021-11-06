@@ -1,0 +1,33 @@
+﻿<Window x:Name="connectionTextBox" x:Class="WindowsApplication.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WindowsApplication"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="350" ResizeMode="NoResize" Activated="Window_Activated">
+
+    <Grid HorizontalAlignment="Center" Width="550" RenderTransformOrigin="0.507,0.438" UseLayoutRounding="False" Margin="0,10,0,-54">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="513*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <PasswordBox HorizontalAlignment="Left" Margin="200,234,0,0" Grid.Row="1" VerticalAlignment="Top" Height="26" Width="166"/>
+        <Button Content="Sing In" HorizontalAlignment="Left" Margin="200,291,0,0" Grid.Row="1" VerticalAlignment="Top" Height="26" Width="166" Click="Button_Click"/>
+        <TextBox HorizontalAlignment="Left" Margin="200,197,0,0" Grid.Row="1" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Height="26" Width="166" TextChanged="TextBox_TextChanged"/>
+        <Label Content="Username" HorizontalAlignment="Left" Margin="123,192,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+        <Label Content="Password" HorizontalAlignment="Left" Margin="123,231,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+        <Image x:Name="no_image" Height="187" Margin="0,-9,101,0" VerticalAlignment="Top" Grid.RowSpan="2" HorizontalAlignment="Right" Width="348" Source="/Files/images/no_image.png"/>
+        <TextBox x:Name="connectionText" HorizontalAlignment="Left" Margin="212,350,0,0" Grid.Row="1" Text="No Internet Connection" TextWrapping="Wrap" VerticalAlignment="Top" Width="142" TextChanged="TextBox_TextChanged" Foreground="#FFFF0606" BorderThickness="0,0,0,0" Loaded="connectionText_Loaded" ContextMenuOpening="connectionText_ContextMenuOpening" Initialized="connectionText_Initialized">
+            <TextBox.ContextMenu>
+                <ContextMenu/>
+            </TextBox.ContextMenu>
+            <TextBox.BindingGroup>
+                <BindingGroup/>
+            </TextBox.BindingGroup>
+        </TextBox>
+    </Grid>
+</Window>

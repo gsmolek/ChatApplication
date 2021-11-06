@@ -13,6 +13,10 @@ if(WIN32)
 	set(CMAKE_CXX_STANDARD 14)
 	add_executable(main ${SRC})
 	#add_executable(main src/Server.cpp "src/mySQLConnect.cpp" "include/mySQLConnect.h")
+	
+	add_subdirectory(lib/sha256)
+	add_subdirectory(lib/rsa)
+
 	target_link_libraries(main wsock32 ws2_32)
 	target_include_directories(${PROJECT_NAME} PUBLIC include/)
 	target_link_libraries(main mysqlcppconn.lib)

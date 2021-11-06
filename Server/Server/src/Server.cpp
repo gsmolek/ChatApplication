@@ -1,6 +1,12 @@
 ﻿#include "server.h"
 #include "mySQLConnect.h"
-void Server::processingRequests(Server::clientInfo clientInfo)
+
+/*
+* TO-DO:
+* thread that removes closed connections from container
+* insert information into the sql tables'
+*/
+void Server::processingRequests(Server::clientInfo clientInfo, std::string ip, std::string port)
 {
 	char buffer[1024]="";
 	int id = -1;
@@ -10,10 +16,10 @@ void Server::processingRequests(Server::clientInfo clientInfo)
 	std::stringstream stringStream;
 	stringStream << std::this_thread::get_id();
 	id = std::stoi(stringStream.str());
-	std::cout << "id " << id << std::endl;
-	while ( count < 5)
+	boolean flag = true;
+	while (flag)
 	{
-		count++;
+		//count++;
 		result = recv(clientInfo.socketFd, (char *)buffer, sizeof buffer, 0);
 		if (result > 0 ) 
 		{
@@ -23,7 +29,7 @@ void Server::processingRequests(Server::clientInfo clientInfo)
 			if(result < 1024)
 				buffer[result] = '\0';
 		}
-		else if (result == 0)
+		else if (result <= 0)
 		{
 			unsigned int count = 0;
 			for (auto& vec : Server::clients)
@@ -31,10 +37,14 @@ void Server::processingRequests(Server::clientInfo clientInfo)
 				if (vec.ip == clientInfo.ip && vec.name == clientInfo.name)
 				{
 					Server::clients.erase(Server::clients.begin()+count);
-					Server::threads.at(id).threadFunction.~thread();
 					Server::threads.erase(id);
+					flag = false;
+					break;
 				}
-				count++;
+			}
+			if (flag == false)
+			{
+				break;
 			}
 		}
 
@@ -60,9 +70,13 @@ void Server::mainThread()
 	{
 		if (isActive)
 		{
+			char hostname[NI_MAXHOST];
+			char servInfo[NI_MAXSERV];
 			int clientTempSize = sizeof Server::clientTemp;
+			std::string ipString, portString;
 			std::stringstream stringStream;
 			Server::clientInfo clientInfoTemp;
+
 			Server::threadsInfo threadsInfoTemp;
 			clientSocket = accept(Server::serverSocket, (SOCKADDR*)&clientTemp, &(clientTempSize));
 			if (!isActive && clientSocket == INVALID_SOCKET)
@@ -71,13 +85,24 @@ void Server::mainThread()
 				continue;
 			}
 			clientInfoTemp.socketFd = clientSocket;
-			clientInfoTemp.sockaddrIn = clientTemp;
-			clientInfoTemp.name = getpeername(clientSocket, (SOCKADDR*)&clientTemp, &(clientTempSize));
-			clientInfoTemp.ip = inet_ntoa(clientInfoTemp.sockaddrIn.sin_addr);
-			clientInfoTemp.port = (unsigned short)ntohs(clientInfoTemp.sockaddrIn.sin_port);
-			clients.push_back(std::move(clientInfoTemp));
 
-			std::thread newThread(&Server::processingRequests, this, clientInfoTemp);
+			getnameinfo((SOCKADDR*)&clientTemp, sizeof SOCKADDR, hostname, NI_MAXHOST, servInfo, NI_MAXSERV, NI_NUMERICSERV);
+			
+			clientInfoTemp.name = hostname;
+			clientInfoTemp.sockaddrIn = clientTemp;
+			clientInfoTemp.ip = inet_ntoa(clientInfoTemp.sockaddrIn.sin_addr);
+			
+			int len = sizeof clientTemp;
+			 getsockname(clientSocket, (SOCKADDR*)&clientTemp, &len);
+			 clientInfoTemp.port = ntohs(clientTemp.sin_port);
+			std::cout << "service port" << clientInfoTemp.port << std::endl;
+	
+			ipString = clientInfoTemp.ip;
+			portString = std::to_string(clientInfoTemp.port);
+
+			clients.push_back((clientInfoTemp));
+
+			std::thread newThread(&Server::processingRequests, this, clientInfoTemp, std::move(ipString), std::move(portString));
 			newThread.detach();
 
 			stringStream << newThread.get_id();
@@ -120,20 +145,20 @@ void Server::listenToSocket()//3
 }
 void Server::commandsThread()
 {
+	std::cout << "##Server## ";
 	while (true)
 	{
 		std::string firstInput, secondInput, thirdInput;
-		std::cout << "##Server## ";
 		std::cin >> firstInput;
 		if (firstInput == "help")
 		{
 			std::cout << "		---HELP---" << std::endl;
-			std::cout << "1. getport - The server port for connections." << std::endl;
-			std::cout << "2. userno - The number of user connnect with their information." << std::endl;
-			std::cout << "3. isactive - is the server accepts connection." << std::endl;
-			std::cout << "4. pause - pause accepting requests." << std::endl;
-			std::cout << "5. start - start accepting requests again." << std::endl;
-			std::cout << "6. exit - close the sockets and exit the program." << std::endl;
+			std::cout << "	1. getport - The server port for connections." << std::endl;
+			std::cout << "	2. userno - The number of user connnect with their information." << std::endl;
+			std::cout << "	3. isactive - is the server accepts connection." << std::endl;
+			std::cout << "	4. pause - pause accepting requests." << std::endl;
+			std::cout << "	5. start - start accepting requests again." << std::endl;
+			std::cout << "	6. exit - close the sockets and exit the program." << std::endl;
 			std::cout << "		---------" << std::endl;
 			/*
 			* TO-DO:
@@ -148,13 +173,13 @@ void Server::commandsThread()
 		else if (firstInput == "getport")
 		{
 			std::cout << "		---PORT---" << std::endl;
-			std::cout << "Port used : " << Server::port << std::endl;
+			std::cout << "	Port used : " << Server::port << std::endl;
 			std::cout << "		----------" << std::endl;
 		}
 		else if (firstInput == "usersno")
 		{
 			std::cout << "		---USERS---" << std::endl;
-			std::cout << "There are  " << Server::clients.size() << " clients connected." << std::endl;
+			std::cout << "	There are  " << Server::clients.size() << " clients connected." << std::endl;
 			int i = 0;
 			for (auto& c : Server::clients)
 				std::cout << i << ". " << c.name << " " << c.ip << " " << c.port << std::endl;
@@ -166,13 +191,13 @@ void Server::commandsThread()
 			std::string temp;
 			if (isActive)
 			{
-				temp = "active.";
+				temp = "	active.";
 			}
 			else if (!isActive)
 			{
-				temp = "inactive.";
+				temp = "	inactive.";
 			}
-			std::cout << "accepting connections is currently " << temp << std::endl;
+			std::cout << "	accepting connections is currently " << temp << std::endl;
 			std::cout << "		-------------------" << std::endl;
 
 		}
@@ -182,11 +207,11 @@ void Server::commandsThread()
 			{
 				isActive = false;
 				closeSocket(false);
-				std::cout << "Accepting connections is diasbled" << std::endl;
+				std::cout << "	Accepting connections is diasbled" << std::endl;
 			}
 			else
 			{
-				std::cout << "The socket is already paused." << std::endl;
+				std::cout << "	The socket is already paused." << std::endl;
 			}
 		}
 		else if (firstInput == "start")
@@ -197,11 +222,11 @@ void Server::commandsThread()
 				bindSocket();
 				listenToSocket();
 				isActive = true;
-				std::cout << "Ready for connections." << std::endl;
+				std::cout << "	Ready for connections." << std::endl;
 			}
 			else
 			{
-				std::cout << "The socket is already running." << std::endl;
+				std::cout << "	The socket is already running." << std::endl;
 			}
 		}
 		else if (firstInput == "dbstatus")
@@ -215,10 +240,11 @@ void Server::commandsThread()
 			}
 		}
 		else {
-			std::cout << "There is no command";
+			std::cout << "	There is no command";
 			std::cout << " \"" << firstInput << "\"" << ". Try \"help\" for more information." << std::endl;
 
 		}
+		std::cout << "##Server## ";
 	}
 }
 Server::Server(int port)
@@ -277,6 +303,6 @@ void Server::errorHandler(std::string message, int exitNo)
 
 int main()
 {
-	Server server(12345);
+	Server server(5555);
 
 }

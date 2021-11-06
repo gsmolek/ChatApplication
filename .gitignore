@@ -7,3 +7,12 @@ Client/.vs/*
 Client/out/*
 Client/Client/out/*
 Client/Client/CMakeSettings.json
+Client/ChatApplication/.vs
+.vs/
+.vs/*
+Client/ChatApplication/.vs/*
+Client/ChatApplication/bin/*
+Client/ChatApplication/bin
+Client/ChatApplication/obj/*
+Client/ChatApplication/obj
+

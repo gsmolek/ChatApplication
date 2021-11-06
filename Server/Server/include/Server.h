@@ -37,9 +37,9 @@
 
 
 #ifdef _WIN32
-#include<winsock.h>
+#include<winsock2.h>
 #include<Windows.h>
-
+#include <ws2tcpip.h>
 #elif __linux__
 #include<sys/socket.h>
 #include<arpa/inet.h>
@@ -89,11 +89,11 @@ private:
 	std::vector<clientInfo> clients;
 	bool acceptFlag = true;
 	bool isActive = false;
-	short port;
+	int port;
 	int mainThreadId;
 	void closeThreads();
 	void errorHandler(std::string message, int exitNo);
-	void processingRequests(Server::clientInfo info);
+	void processingRequests(Server::clientInfo info, std::string ip, std::string port);
 	void mainThread();
 	void createSocket();
 	void bindSocket();
