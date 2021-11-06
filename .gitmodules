@@ -1,6 +1,1 @@
-[submodule "Client/WindowsApplication/WindowsApplication/lib/RSA"]
-	path = Client/WindowsApplication/WindowsApplication/lib/RSA
-	url = https://github.com/gsmolek/RSA.git
-[submodule "Client/WindowsApplication/WindowsApplication/lib/sha256"]
-	path = Client/WindowsApplication/WindowsApplication/lib/sha256
-	url = https://github.com/gsmolek/sha256.git
+
