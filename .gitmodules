@@ -1,7 +1,0 @@
-
-[submodule "Server/Server/lib/RSA"]
-	path = Server/Server/lib/RSA
-	url = https://github.com/gsmolek/RSA.git
-[submodule "Server/Server/lib/sha256"]
-	path = Server/Server/lib/sha256
-	url = https://github.com/gsmolek/sha256.git
