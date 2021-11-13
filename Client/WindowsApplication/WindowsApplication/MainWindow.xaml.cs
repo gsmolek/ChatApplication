@@ -60,19 +60,19 @@ namespace WindowsApplication
                 };
                 File.WriteAllLines(keysFilePath, lines);
             }
-            Client = new Windows.Client("127.0.0.1", 5555);
+            client = new Windows.Client("127.0.0.1", 5555);
             
             Console.WriteLine("P: " + rsa.P);
             Console.WriteLine("Q: " + rsa.Q);
             byte[] str = Encoding.ASCII.GetBytes("hello");
             byte[] res = rsa.encryption(str);
             Console.WriteLine("encrypted: "+Encoding.UTF8.GetString(res, 0, res.Length));
+            string res_str = Encoding.UTF8.GetString(res, 0, res.Length);
+            client.Send(res_str);
             byte[] dec = rsa.decryption(res);
             Console.WriteLine("decrypted: " + Encoding.UTF8.GetString(dec, 0, dec.Length));
             string res1= Cryptology.hash("hello world!");
-            Console.WriteLine("hash: "+ res1);
-
-
+            Console.WriteLine("hash: " + res1);
             InitializeComponent();
 
 

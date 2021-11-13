@@ -3,21 +3,32 @@
 project(main)
 
 if(WIN32)
+
 	set(FULL_PATH_TO_MYSQL_CONNECTOR_CPP_DIR "C:/Program Files/MySQL/Connector C++ 8.0")
 	set(FULL_PATH_TO_BOOST_DIR "C:/Program Files/Boost/boost_1_77_0")
 	set(INCLUDE /include/)
 	FILE(GLOB SRC */*.cpp)
+	#FIND_PACKAGE( Boost 1.77 COMPONENTS program_options REQUIRED )
+	#INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
+	INCLUDE_DIRECTORIES( ${FULL_PATH_TO_BOOST_DIR} )
 	include_directories(${FULL_PATH_TO_MYSQL_CONNECTOR_CPP_DIR}/include)
 	include_directories(${INCLUDE})
 	link_directories(${FULL_PATH_TO_MYSQL_CONNECTOR_CPP_DIR}/lib64/vs14)
-	set(CMAKE_CXX_STANDARD 14)
-	add_executable(main ${SRC})
-	#add_executable(main src/Server.cpp "src/mySQLConnect.cpp" "include/mySQLConnect.h")
-	
+	set(CMAKE_CXX_STANDARD 17)
 	add_subdirectory(lib/sha256)
 	add_subdirectory(lib/rsa)
 
+
+	add_executable(main ${SRC})
+	#add_executable(main src/Server.cpp "src/mySQLConnect.cpp" "include/mySQLConnect.h")
+	#set_property(TARGET main PROPERTY CXX_STANDARD 17)
+	#set_property(TARGET main PROPERTY CXX_STANDARD_REQUIRED ON)
+
+	target_link_libraries(main sha256 )
+	target_link_libraries(main rsa)
+	TARGET_LINK_LIBRARIES(main LINK_PUBLIC ${Boost_LIBRARIES} )
 	target_link_libraries(main wsock32 ws2_32)
+
 	target_include_directories(${PROJECT_NAME} PUBLIC include/)
 	target_link_libraries(main mysqlcppconn.lib)
 	target_link_libraries(main mysqlcppconn-static.lib)
