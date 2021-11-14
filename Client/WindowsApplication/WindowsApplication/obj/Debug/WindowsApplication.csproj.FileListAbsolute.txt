@@ -15,3 +15,4 @@ C:\Users\PP\Documents\Projects\ChatApplication\Client\WindowsApplication\Windows
 C:\Users\PP\Documents\Projects\ChatApplication\Client\WindowsApplication\WindowsApplication\obj\Debug\WindowsApplication.csproj.CoreCompileInputs.cache
 C:\Users\PP\Documents\Projects\ChatApplication\Client\WindowsApplication\WindowsApplication\obj\Debug\WindowsApplication.exe
 C:\Users\PP\Documents\Projects\ChatApplication\Client\WindowsApplication\WindowsApplication\obj\Debug\WindowsApplication.pdb
+C:\Users\PP\Documents\Projects\ChatApplication\Client\WindowsApplication\WindowsApplication\obj\Debug\WindowsApplication.csproj.SuggestedBindingRedirects.cache

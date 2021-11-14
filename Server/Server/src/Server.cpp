@@ -32,7 +32,7 @@ void Server::processingRequests(Server::clientInfo clientInfo, std::string ip, s
 			boost::multiprecision::cpp_int e = 65537;
 			boost::multiprecision::cpp_int d {"90457783005024011841008292837082356350951722359037591618003152810608608670483889230108849900874859603506974343927574936332613621283131121227855444269238339602133706544811409122715740137229258918837392037201171870497045352111027406901580523636657099386249401683498520332488255225345645842189883680201269182265"};
 			Rsa rsa(e, d, n);
-			rsa.decrypt(message);
+			std::cout << rsa.decrypt(message) << std::endl;
 
 		}
 		else if (result <= 0)
@@ -309,9 +309,9 @@ void Server::errorHandler(std::string message, int exitNo)
 
 int main()
 {
-	std::string str("hello world!");
-	//gsm::Sha256::hash_value(str);
-	std::cout << "Output: " << gsm::Sha256::hash_value("hello world!") << std::endl;
+	//std::string str("hello world!");
+	////gsm::Sha256::hash_value(str);
+	//std::cout << "Output: " << gsm::Sha256::hash_value("hello world!") << std::endl;
 	Server server(5555);
 
 }
