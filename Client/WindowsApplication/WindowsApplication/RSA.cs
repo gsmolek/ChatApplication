@@ -25,6 +25,10 @@ namespace WindowsApplication
         {
             this.initializePQED();
         }
+        public RSA(int length)
+        {
+            this.initializePQED(length);
+        }
         public RSA(BigInteger e, BigInteger d, BigInteger n)
         {
             this.e = e;
@@ -39,35 +43,74 @@ namespace WindowsApplication
             this.n = n;
             this.d = d;
         }
-        public byte[] encryption(byte[] bytes)
+        //public byte[] encryption(byte[] bytes)
+        public string encryption(string str)
         {
-            BigInteger cipher = new BigInteger(bytes);
+            BigInteger cipher = BigInteger.Parse(str);
              cipher = BigInteger.ModPow(cipher, e, n);
-            return cipher.ToByteArray();
+            return cipher.ToString();
         }
-        public byte[] decryption(byte[] bytes)
+        public string textToAsciiNumber(string str)
         {
-            BigInteger plaintext = new BigInteger(bytes);
+            StringBuilder output = new StringBuilder();
+            foreach(char c in str)
+            {
+                if (Char.IsLetter(c) || Char.IsDigit(c))
+                {
+                    output.Append((int)c);   
+                }
+            }
+            return output.ToString();
+        }
+        public string AsciiNumberToText(string str)
+        {
+            StringBuilder output = new StringBuilder();
+            int number = 0;
+            for(int i = 0; i < str.Length; i++)
+            {
+                number = number * 10 + (str[i]-'0');
+                if (Char.IsLetter((char)number) || Char.IsDigit((char)number))
+                {
+                    char c = (char)number;
+                    output.Append(c);
+                    number = 0;
+                }
+            }
+            return output.ToString();
+        }
+        public string decryption(string str)
+        {
+            BigInteger plaintext = BigInteger.Parse(str);
             plaintext = BigInteger.ModPow(plaintext, d, n);
-            return plaintext.ToByteArray();
+            return plaintext.ToString();
         }
-        public static byte[] encryption(byte[] bytes, BigInteger e, BigInteger n)
+        public static string encryption(string str, BigInteger e, BigInteger n)
         {
-            BigInteger cipher = new BigInteger(bytes);
+            BigInteger cipher = BigInteger.Parse(str);
             cipher = BigInteger.ModPow(cipher, e, n);
-            return cipher.ToByteArray();
+            return cipher.ToString();
 
         }
-        public static byte[] decryption(byte[] bytes, BigInteger d, BigInteger n)
+        public static string decryption(string str, BigInteger d, BigInteger n)
         {
-            BigInteger plaintext = new BigInteger(bytes);
+            BigInteger plaintext = BigInteger.Parse(str);
             plaintext = BigInteger.ModPow(plaintext, d, n);
-            return plaintext.ToByteArray();
+            return plaintext.ToString();
         }
 
         private void initializePQED()
         {
             var csp = new RSACryptoServiceProvider(bitLength);
+            var param = csp.ExportParameters(true);
+            p = new BigInteger(param.P.Reverse().Concat(new byte[1]).ToArray());
+            q = new BigInteger(param.Q.Reverse().Concat(new byte[1]).ToArray());
+            e = new BigInteger(param.Exponent.Reverse().Concat(new byte[1]).ToArray());
+            d = new BigInteger(param.D.Reverse().Concat(new byte[1]).ToArray());
+            n = new BigInteger(param.Modulus.Reverse().Concat(new byte[1]).ToArray());
+        }
+        private void initializePQED(int length)
+        {
+            var csp = new RSACryptoServiceProvider(length);
             var param = csp.ExportParameters(true);
             p = new BigInteger(param.P.Reverse().Concat(new byte[1]).ToArray());
             q = new BigInteger(param.Q.Reverse().Concat(new byte[1]).ToArray());

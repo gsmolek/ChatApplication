@@ -35,9 +35,18 @@
 
 class mySQLConnect {
 public:
+	mySQLConnect()
+	{
+		mySQLConnect("127.0.0.1","3306", "root", "1234");
+	};
 	mySQLConnect(std::string ip, std::string port, std::string username, std::string password);
 	void close();
+	std::string get_single_value(std::string query);
+	std::vector<std::string> get_multiple_values(std::string query);
+	std::string get_username(std::string username);
 private:
-	sql::mysql::MySQL_Driver* mySqlDriver = nullptr;
-	sql::Connection* connection = nullptr;
+	sql::mysql::MySQL_Driver* mySqlDriver;
+	void print_exception(sql::SQLException& e);
+	sql::Connection* connection;
+	
 };

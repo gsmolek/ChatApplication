@@ -15,9 +15,9 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <PasswordBox HorizontalAlignment="Left" Margin="200,234,0,0" Grid.Row="1" VerticalAlignment="Top" Height="26" Width="166"/>
-        <Button Content="Sing In" HorizontalAlignment="Left" Margin="200,291,0,0" Grid.Row="1" VerticalAlignment="Top" Height="26" Width="166" Click="Button_Click"/>
-        <TextBox HorizontalAlignment="Left" Margin="200,197,0,0" Grid.Row="1" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Height="26" Width="166" TextChanged="TextBox_TextChanged"/>
+        <PasswordBox x:Name="password_input" HorizontalAlignment="Left" Margin="200,234,0,0" Grid.Row="1" VerticalAlignment="Top" Height="26" Width="166"/>
+        <Button x:Name="sign_in_button" Content="Sing In" HorizontalAlignment="Left" Margin="200,291,0,0" Grid.Row="1" VerticalAlignment="Top" Height="26" Width="166" Click="Button_Click"/>
+        <TextBox x:Name="username_input" HorizontalAlignment="Left" Margin="200,197,0,0" Grid.Row="1" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Height="26" Width="166" TextChanged="TextBox_TextChanged"/>
         <Label Content="Username" HorizontalAlignment="Left" Margin="123,192,0,0" Grid.Row="1" VerticalAlignment="Top"/>
         <Label Content="Password" HorizontalAlignment="Left" Margin="123,231,0,0" Grid.Row="1" VerticalAlignment="Top"/>
         <Image x:Name="no_image" Height="187" Margin="0,-9,101,0" VerticalAlignment="Top" Grid.RowSpan="2" HorizontalAlignment="Right" Width="348" Source="/Files/images/no_image.png"/>

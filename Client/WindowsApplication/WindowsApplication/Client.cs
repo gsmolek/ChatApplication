@@ -43,7 +43,7 @@ namespace Windows
             string message = string.Empty;
             byte[] tempByteArray = new byte[256];
             int bytes = networkStream.Read(tempByteArray, 0, tempByteArray.Length);
-            message = System.Text.Encoding.ASCII.GetString(tempByteArray, 0, tempByteArray.Length);
+            message = System.Text.Encoding.ASCII.GetString(tempByteArray, 0, bytes);
             return message;
         }
         ~Client()

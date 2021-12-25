@@ -9,8 +9,17 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="17*"/>
-            <ColumnDefinition Width="783*"/>
+            <ColumnDefinition Width="142*"/>
+            <ColumnDefinition Width="641*"/>
         </Grid.ColumnDefinitions>
+        <ListView x:Name="listView" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="77,10,578,29" SelectionChanged="listView_SelectionChanged" Grid.Column="1" Grid.ColumnSpan="2">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="UserName" DisplayMemberBinding="{Binding UserName}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
 
     </Grid>
 </Window>

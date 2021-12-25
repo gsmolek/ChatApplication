@@ -56,8 +56,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DigitalSignature.cs" />
     <Compile Include="files.cs" />
+    <Compile Include="Friend.cs" />
     <Compile Include="RSA.cs" />
+    <Compile Include="User.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -111,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Files\cryptography\" />
+    <Folder Include="Files\friends\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
