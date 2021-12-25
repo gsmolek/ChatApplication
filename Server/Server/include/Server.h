@@ -4,6 +4,7 @@
 #include <sstream>
 #include<stdio.h>
 #include<stdlib.h>
+#include<cstring>
 #include<string>
 #include<vector>
 #include<thread>
@@ -12,6 +13,7 @@
 #include<rsa.h>
 #include<sha256.h>
 #include<mySQLConnect.h>
+#include<cmath>
 
 #include <boost/multiprecision/cpp_int.hpp>
 #include <mysql/jdbc.h>
@@ -114,4 +116,6 @@ private:
 	void codeOperations(int code, std::string message);
 	std::string digital_signing(const std::string& message, const std::string& code);
 	std::string check_digital_signing(const std::string& message);
+	std::vector<std::string> partitioning(const int size, const std::string& input);
+	std::vector<std::string> padding(int size_to_add, std::string& input);
 };

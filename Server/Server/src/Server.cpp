@@ -393,8 +393,6 @@ void Server::codeOperations(const int code,const std::string message)
 Server::Server(const int port)
 {
 	Server::port = port;
-	Rsa a(1024);
-	Rsa b(512);
 	Server::threadsInfo mainThreadInfo;
 	Server::threadsInfo commandThreadInfo;
 	std::stringstream stringStream;
@@ -446,6 +444,17 @@ void Server::errorHandler(const std::string& message, const int exitNo)
 	exit(exitNo);
 }
 
+std::vector<std::string> Server::partitioning(const int size,const std::string& input)
+{
+	std::vector<string> output{};
+	int number_of_blocks{ std::ceil(input.size() / std::static_cast<double>(size)) };
+	for (int i = 0, int index = 0; i < number_of_blocks; ++i, ++index)
+	{
+		output.push_back(input.substr(index, size));
+		index += size;
+	}
+	return output;
+}
 int main()
 {
 	/*
