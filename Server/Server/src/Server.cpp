@@ -9,12 +9,19 @@
 */
 void Server::processingRequests(const Server::clientInfo& clientInfo, const std::string& ip, const std::string& port)
 {
-	char buffer[1024]="";
+	char buffer[BUFFER_SIZE]{};
 	int id = -1;
 	unsigned short count = 0;
 	int result;
-	std::string message="";
+	std::string message{};
 	std::stringstream stringStream;
+
+
+	int message_length;
+	int hash_length;
+	int password_length;
+	int username_length;
+
 	stringStream << std::this_thread::get_id();
 	id = std::stoi(stringStream.str());
 	boolean flag = true;
@@ -25,7 +32,7 @@ void Server::processingRequests(const Server::clientInfo& clientInfo, const std:
 		if (result > 0 ) 
 		{
 			//message = "";
-			if(result < 1024)
+			if(result < BUFFER_SIZE)
 				buffer[result] = '\0';
 			message.append(buffer);
 			std::cout << message << "\n" << std::endl;
@@ -38,7 +45,40 @@ void Server::processingRequests(const Server::clientInfo& clientInfo, const std:
 					boost::multiprecision::cpp_int n = boost::multiprecision::cpp_int{ result.at(1) };
 					std::string ip = result.at(2);
 					*/
+			
+			//Decryption needed before we can retrieve the code of the message
+			message = Rsa::static_decryption(message, d, n);
+			std::string code = message.substr(0, 3);
+			/*
+			*
+			*	static bool validate
+			*	(boost::function<std::string(const std::string& hash,
+			*	boost::multiprecision::cpp_int&,
+			*	boost::multiprecision::cpp_int&)> signing_function,
+			*	boost::multiprecision::cpp_int n, boost::multiprecision::cpp_int e,
+			*	std::function<std::string(const std::string&)> hash,
+			*	const std::string& message_recieved,
+			*	const std::string& hash_recieved);
+			* 
+			*/
+			if (code == "001")
+			{
+				//needs to be decrypted!
+				message_length = std::stoi(message.substr(3,5));
+				hash_length = std::stoi(message.substr(8, 3));
+				password_length = std::stoi(message.substr(16, 3));
+				username_length = std::stoi(message.substr(19, 3));
 
+				std::string password = message.substr(22, password_length);
+				std::string username = message.substr(22 + password_length, username_length);
+				std::string hash = message.substr(22 + message_length, hash_length);
+				DigitalSignature::validate(hash,Rsa::static_encryption)
+				//hash needs to be decrypted inorder to compare
+			}
+			else if (code == "002")
+			{
+
+			}
 			std::string message = "";
 
 			send(clientInfo.socketFd, message.c_str(), sizeof message.c_str(), 0);
@@ -263,17 +303,7 @@ void Server::commandsThread()
 		std::cout << "##Server## ";
 	}
 }
-void Server::codeOperations(const int code,const std::string message)
-{
-	if (code == 2)
-	{
-		std::string username;
-		std::string username_add;
-		std::string to_ip;
 
-
-	}
-}
 Server::Server(const int port)
 {
 	Server::port = port;
@@ -294,9 +324,21 @@ Server::Server(const int port)
 	commandThreadInfo.id = std::stoi(stringStream.str());
 	commandThreadInfo.threadFunction = std::move(commandT);
 	Server::threads.insert({ commandThreadInfo.id, std::move(commandThreadInfo)});
-	std::string tr = "hello world!";
-	//DigitalSignature::signing(, gsm::Sha256::hash_value, this->n, this->d, tr);
-
+	std::string tr{};
+	tr += n.str();
+	tr += e.str();
+	tr += gsm::Sha256::hash_value(tr);
+	std::cout << "tr length: " << tr.length() << std::endl;
+	//tr = DigitalSignature::signing(Rsa::static_encryption, gsm::Sha256::hash_value, this->n, this->d, tr);
+	std::cout << "tr: " << tr << std::endl;
+	std::cout << std::endl;
+	std::cout << std::endl;
+	//Rsa::static_decryption(tr, e, n);
+	tr = Rsa::char_string_to_ascii_value_string(tr);
+	std::cout << "tr: " << std::endl;
+	std::cout << "tr: " << std::endl;
+	std::cout << "tr: " << tr << std::endl;
+	std::cout << "tr length: " << tr.length() << std::endl;
 	mainThread();
 }
 void Server::closeSocket(bool terminate)
@@ -330,49 +372,10 @@ void Server::errorHandler(const std::string& message, const int exitNo)
 	exit(exitNo);
 }
 
-std::vector<std::string> Server::partitioning(const int size,const std::string& input)
-{
-	std::vector<std::string> output{};
-	int number_of_blocks{ static_cast<int>(std::ceil(input.size() / static_cast<double>(size))) };
-	int index;
-	for (int i = 0, index = 0; i < number_of_blocks; ++i, ++index)
-	{
-		output.push_back(input.substr(index, size));
-		index += size;
-	}
-	return output;
-}
+
 int main()
 {
-	/*
-	std::string str("hello world!");
-	//gsm::Sha256::hash_value(str);
-	std::cout << "Output: " << gsm::Sha256::hash_value("hello worldddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd!") << std::endl;
-	boost::multiprecision::cpp_int n{ "118837584187953707734116996505309433271305036047072257584674510398686132109960763510276303891946351157339465532974812143736328807642075217333720126910818148445331735375776758952676130677716169884129729226370600894581566337218556091430401843055445592163691945656925461932088783476663016651863944646044412917681" };
-	boost::multiprecision::cpp_int e = 65537;
-	boost::multiprecision::cpp_int d{ "90457783005024011841008292837082356350951722359037591618003152810608608670483889230108849900874859603506974343927574936332613621283131121227855444269238339602133706544811409122715740137229258918837392037201171870497045352111027406901580523636657099386249401683498520332488255225345645842189883680201269182265" };
-	std::cout << sizeof n << std::endl;
-	std::cout << sizeof e << std::endl;
-	std::cout << sizeof d << std::endl;
 
-	std::cout << gsm::Sha256::hash_value("manager") << std::endl;	
-	std::string text = t.encrypt("hello");
-	std::cout << text << std::endl;
-	std::cout << t.decrypt(text) << std::endl;
-	
-	std::string atb = rsa.text_to_ascii_number("hello");
-	std::cout << "hello: " << rsa.ascii_number_to_text(atb) << std::endl;
-	std::cout <<"in bits: " << atb << std::endl;
-	std::string enc = rsa.encrypt(atb);
-	std::cout << enc << std::endl;
-	std::cout << "\n" << std::endl;
-	std::cout << "\n" << std::endl;
-	std::cout << "\n" << std::endl;
-	std::cout << "\n --- \n" << std::endl;
-	std::cout << rsa.decrypt(enc) << std::endl;
-	
-	std::cout << gsm::Sha256::hash_value("1234") << std::endl;
-	*/
 	Server server(5555);
 
 }

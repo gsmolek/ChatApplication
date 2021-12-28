@@ -2,6 +2,8 @@
 #include<string>
 #include<functional>
 #include <boost/multiprecision/cpp_int.hpp>
+#include <boost/function.hpp>
+#include <boost/function_equal.hpp>
 /*
 * DIGITAL SIGNATURE
 * 1) Alice creates a one way hash of the file.
@@ -15,14 +17,19 @@ class DigitalSignature
 {
 public:
 
-    static std::string signing(std::function<std::string(const std::string&, const boost::multiprecision::cpp_int&,
-        const boost::multiprecision::cpp_int&)> signing_function,
+    static std::string signing(boost::function<std::string(const std::string&, boost::multiprecision::cpp_int&,
+        boost::multiprecision::cpp_int&)> signing_function,
         std::function<std::string(const std::string&)> hash, 
-        const boost::multiprecision::cpp_int& n, const boost::multiprecision::cpp_int& d,
+        boost::multiprecision::cpp_int n,boost::multiprecision::cpp_int d,
         std::string& input);
 
-    static bool validate(std::function<std::string(const std::string& hash, const boost::multiprecision::cpp_int&,
-        const boost::multiprecision::cpp_int&)> signing_function, const boost::multiprecision::cpp_int& n, const boost::multiprecision::cpp_int& e, std::function<std::string(const std::string&)> hash, const std::string& message_recieved, const std::string& hash_recieved);
+    static bool validate(boost::function<std::string(const std::string& hash,
+        boost::multiprecision::cpp_int&,
+        boost::multiprecision::cpp_int&)> signing_function,
+        boost::multiprecision::cpp_int n, boost::multiprecision::cpp_int e,
+        std::function<std::string(const std::string&)> hash,
+        const std::string& message_recieved,
+        const std::string& hash_recieved);
 
 
 };

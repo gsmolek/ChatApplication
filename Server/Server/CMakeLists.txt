@@ -20,7 +20,7 @@ if(WIN32)
 	add_subdirectory(lib/rsa)
 
 	#add_executable(main ${SRC} "src/sha256.cpp" "include/sha256.h" "src/rsa.cpp" "include/rsa.h")
-	add_executable(main ${SRC} "src/server.cpp" "src/DigitalSignature.cpp" "include/DigitalSignature.h")
+	add_executable(main ${SRC} "src/server.cpp" "src/DigitalSignature.cpp" "include/DigitalSignature.h" "src/Blocks.cpp" "include/Blocks.h")
 
 	TARGET_LINK_LIBRARIES(main LINK_PUBLIC ${Boost_LIBRARIES} wsock32 ws2_32 mysqlcppconn.lib mysqlcppconn-static.lib sha256 rsa)
 	#target_link_libraries(main wsock32 ws2_32)
